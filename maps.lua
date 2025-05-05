@@ -93,13 +93,17 @@ curve2(235,127,183,150,235,150,182.5,127,52.5,23,4),
 Maps.map1.goal={196,124,6}
 Maps.map1.horsePos={57,74, 79,31, 98,69, 57,46, 79,61, 98,20, 58,21, 99,40, 79,83}
 Maps.map1.gatePos={113,4}
---
-function Maps.initMap(mapname)
-    local m = {walls={},goal=nil}
+
+--Less memory-intensive option as all local Maps variables no longer need to stay loaded
+return function(HC,mapname)
+    local m = {
+        --walls={}
+        }
     assert(Maps[mapname],"map does not exist")
     for _,v in ipairs(Maps[mapname].walls) do
-        print(v)
-        table.insert(m.walls,HC.polygon(unpack(v)))
+        --print(v)
+        --table.insert(m.walls,HC.polygon(unpack(v)))
+        HC.polygon(unpack(v))
     end
     m.goal=HC.circle(unpack(Maps[mapname].goal))
     m.bg=love.graphics.newImage("resources/maps/"..mapname..".png")
@@ -108,4 +112,4 @@ function Maps.initMap(mapname)
     return m
 end
 
-return Maps
+--return Maps

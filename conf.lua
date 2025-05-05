@@ -1,5 +1,7 @@
 function love.conf(t)
   t.modules.physics=false
-  --t.system.speedup=true
+  if t.system then
+  t.system.speedup=true
+  end
   --t.console=true
 end
