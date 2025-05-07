@@ -3,6 +3,7 @@ local Menu={}
 local cursor,menuSize,page,cursPos,menubgB,menubgT,cursorI,menuTxt,btmTxt,mark,hSelectList,hIcons,menuTimer,txtCycle,maps,gpMenuFunctions
 --update with any future horses added
 local fullHorseList={"MRY","CYN","SUP","YEL","BUL","KNB","COM","BOX","RES"}
+--local fullHorseList={"MRY","CYN","SUP","YEL","BUL","KNB","COM","BOX","RES","AMF","BIN","NGT","FF8","OOB","FFF"}
 --update with future maps added
 local fullMapList={"map1"}
 love.graphics.setFont(tFont)
@@ -13,9 +14,10 @@ hSelectList={}
     end
 
 local function menuUnload(hline,mapname)
+---@diagnostic disable-next-line: unbalanced-assignments
     cursor,menuSize,page,cursPos,menubgB,menubgT,cursorI,menuTxt,btmTxt,mark,hSelectList,hIcons,menuTimer,txtCycle,maps,gpMenuFunctions=nil
     collectgarbage("collect")
-    love.mainload(hline,mapname)
+    return love.mainload(hline,mapname)
 end
 
 function love.mainStartup()
@@ -49,9 +51,9 @@ function love.mainStartup()
     gpMenuFunctions.start=love.event.quit
     gpMenuFunctions.a=function ()
         if cursor==1 then
-            menuUnload({unpack(fullHorseList)},"map1")
-        return end
-        Menu.horseStartup()
+            return menuUnload({unpack(fullHorseList)},"map1")
+        end
+        return Menu.horseStartup()
     end
 end
 
@@ -170,14 +172,14 @@ function Menu.mapStartup()
         for k,v in pairs(hSelectList) do
             if v then temp[#temp+1]=k end
         end
-        menuUnload(temp,fullMapList[cursor+6*page])
+        return menuUnload(temp,fullMapList[cursor+6*page])
     end
 end
 
 function Menu.gamepadMenu(_,button)
     local func = gpMenuFunctions[button]
     if func then
-        func()
+        return func()
     end
 end
 
@@ -197,9 +199,9 @@ end
 function Menu.drawMenuMain(screen)
     if screen=="bottom" then
         love.graphics.draw(menubgB)
-        love.graphics.draw(cursorI,cursPos[cursor][1],cursPos[cursor][2],0,1,1,6,6)
-    return end
-    love.graphics.draw(menubgT)
+        return love.graphics.draw(cursorI,cursPos[cursor][1],cursPos[cursor][2],0,1,1,6,6)
+    end
+    return love.graphics.draw(menubgT)
 end
 
 function Menu.drawMenuHorse(screen)
@@ -219,7 +221,7 @@ function Menu.drawMenuHorse(screen)
             love.graphics.setColor(1,1,1)
         end
     return end
-    love.graphics.draw(menubgT)
+    return love.graphics.draw(menubgT)
 end
 
 function Menu.drawMenuMaps(screen)
@@ -235,7 +237,8 @@ function Menu.drawMenuMaps(screen)
         end
         love.graphics.setColor(1,1,1)
     return end
-    love.graphics.draw(maps[cursor+6*page])
+    return love.graphics.draw(maps[cursor+6*page])
 end
 
 love.mainStartup()
+return function () return fullHorseList,fullMapList end

@@ -15,9 +15,13 @@ tFont:setLineHeight(1.3)
 -- initialize a few local tables
 local map,winscreen,control={},{},{}
 -- decided to rework trial
-local trial={map1=0}
 
-require "menu"
+local fullHorseList,fullMapList= require "menu"()
+package.loaded["menu"]=nil
+local trial={}
+for _,v in ipairs(fullMapList) do
+    trial[v]=0
+end
 love.graphics.set3D(false)
 
 -- function variables
@@ -169,12 +173,12 @@ local function gamepadmain(_,button)
     if button=="start" then
         love.audio.stop()
         love.graphics.setColor(1,1,1)
-        love.mainStartup()
-    return end
+        return love.mainStartup()
+    end
     if button=="back" and not flags.resetting then
         flags.resetting=true
-        startTest()
-    return end
+        return startTest()
+    end
     if button=="dpup" then
         numHorses=numHorses<9 and numHorses+1 or 9
     return end
@@ -182,8 +186,8 @@ local function gamepadmain(_,button)
         numHorses=numHorses>1 and numHorses-1 or 1
     return end
     if button =="x" then
-        raceMus:stop()
-    return end
+        return raceMus:stop()
+    end
     --[[ debug wall view with a 
     if button=="a" then
         flags.drawWall=not flags.drawWall
@@ -212,7 +216,7 @@ function love.mainload(hline,mapname)
     raceMus = love.audio.newSource("resources/sounds/hrt.ogg","stream")
     raceMus:setLooping(true)
     love.gamepadpressed=gamepadmain
-    startTest(hline,mapname)
+    return startTest(hline,mapname)
 end
 --]]
 
@@ -326,7 +330,7 @@ function control.startdraw()
     end
     love.graphics.draw(pybbox.icon,pybbox.x,pybbox.y,0,1,1)
     love.graphics.setColor(1,1,1,1)
-    love.graphics.draw(gate,unpack(map.gatePos))
+    return love.graphics.draw(gate,unpack(map.gatePos))
 end
 
 function control.maindraw()
@@ -352,7 +356,7 @@ function control.windraw()
     if wonTime>6 then
         draw=control.winscreendraw
     end
-    control.maindraw()
+    return control.maindraw()
 end
 
 function control.winscreendraw()
@@ -362,9 +366,9 @@ function control.winscreendraw()
     if wonTime>7 then
         local k=(wonTime>8 and 1 or wonTime-7)
         if winscreen.txt2.scale and k>winscreen.txt2.scale then
-            love.graphics.draw(winscreen.txt2.txt,40,240,0,k,k,0,100)
-        return end
-        love.graphics.draw(winscreen.txt,40,240,0,k,k,0,39)
+            return love.graphics.draw(winscreen.txt2.txt,40,240,0,k,k,0,100)
+        end
+        return love.graphics.draw(winscreen.txt,40,240,0,k,k,0,39)
     end
 end
 
@@ -421,7 +425,7 @@ end
 
 function Maindraw(screen)
     if screen=="bottom" then
-        drawBottom()
-    return end
-    draw()
+        return drawBottom()
+    end
+    return draw()
 end
