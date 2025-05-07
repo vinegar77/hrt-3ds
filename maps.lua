@@ -95,19 +95,19 @@ Maps.map1.horsePos={57,74, 79,31, 98,69, 57,46, 79,61, 98,20, 58,21, 99,40, 79,8
 Maps.map1.gatePos={113,4}
 
 --Less memory-intensive option as all local Maps variables no longer need to stay loaded
-return function(HC,mapname)
-    local m = {
-        --walls={}
-        }
+return function(mapname,HC)
+    local m = {}
     assert(Maps[mapname],"map does not exist")
-    for _,v in ipairs(Maps[mapname].walls) do
-        --print(v)
-        --table.insert(m.walls,HC.polygon(unpack(v)))
-        HC.polygon(unpack(v))
+    if HC then
+        for _,v in ipairs(Maps[mapname].walls) do
+            HC.polygon(unpack(v))
+        end
+        m.goal=HC.circle(unpack(Maps[mapname].goal))
+    else
+        m.goal=Maps[mapname].goal
+        m.bg=love.graphics.newImage("resources/maps/"..mapname..".png")
+        m.gatePos=Maps[mapname].gatePos
     end
-    m.goal=HC.circle(unpack(Maps[mapname].goal))
-    m.bg=love.graphics.newImage("resources/maps/"..mapname..".png")
-    m.gatePos=Maps[mapname].gatePos
     m.horsePos=Maps[mapname].horsePos
     return m
 end
