@@ -16,7 +16,6 @@ end
 local inHorChan=love.thread.getChannel("inHorses")
 local outHorChan=love.thread.getChannel("outHorses")
 local controlChan=love.thread.getChannel("control")
-local hitChan=love.thread.getChannel("hit")
 -- initialize the 3 horse arrays: 
 --inHorses: inputs to collision module, give position and if sound should play
 --shapeHorses: local HC shapes used to determine collisions

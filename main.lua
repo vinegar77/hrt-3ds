@@ -27,7 +27,7 @@ local draw = function()end
 local flags,hspeed,cTime,pybStageTimer,wonTime,betSound,pybbox,xgc,ygc,numHorses,frames,gate,chline,cmapname,raceMus
 local thread = love.thread.newThread("GirlBoner.lua")
 local inHorses,outHorses,hIcons={},{},{}
-local controlChan,inHorChan,outHorChan,hitChan
+local controlChan,inHorChan,outHorChan
 
 local function movePYB(dt)
     --move the place ur bets box
@@ -108,7 +108,6 @@ local function startTest(hline,mapname)
     controlChan=love.thread.getChannel("control")
     inHorChan=love.thread.getChannel("inHorses")
     outHorChan=love.thread.getChannel("outHorses")
-    hitChan=love.thread.getChannel("hit")
     -- shuffle horse list
     for i = #chline, 2, -1 do
         local j = love.math.random(i)
