@@ -2,10 +2,9 @@ local Menu={}
 -- all locals that can be deleted after leaving menu
 local cursor,menuSize,page,cursPos,menubgB,menubgT,cursorI,menuTxt,btmTxt,mark,hSelectList,hIcons,menuTimer,txtCycle,maps,gpMenuFunctions
 --update with any future horses added
-local fullHorseList={"MRY","CYN","SUP","YEL","BUL","KNB","COM","BOX","RES"}
---local fullHorseList={"MRY","CYN","SUP","YEL","BUL","KNB","COM","BOX","RES","AMF","BIN","NGT","FF8","OOB","FFF"}
+local fullHorseList={"MRY","CYN","SUP","YEL","BUL","KNB","COM","BOX","RES","AMF","BIN","NGT","FF8","OOB","FFF"}
 --update with future maps added
-local fullMapList={"map1"}
+local fullMapList={"map1","map4"}
 love.graphics.setFont(tFont)
 
 hSelectList={}
@@ -51,7 +50,7 @@ function love.mainStartup()
     gpMenuFunctions.start=love.event.quit
     gpMenuFunctions.a=function ()
         if cursor==1 then
-            return menuUnload({unpack(fullHorseList)},"map1")
+            return menuUnload({unpack(fullHorseList)},fullMapList[love.math.random(1,#fullMapList)])
         end
         return Menu.horseStartup()
     end
@@ -156,7 +155,7 @@ function Menu.mapStartup()
     menuSize=math.min(#fullMapList,6)
     maps={}
     for _,v in ipairs(fullMapList) do
-        maps[#maps+1] = love.graphics.newImage("resources/maps/"..v..".png")
+        maps[#maps+1] = love.graphics.newImage("resources/maps/preview/"..v..".png")
     end
     menuTxt=love.graphics.newImage("resources/menu/bottom/menutxtMap.png")
     btmTxt[2],btmTxt[3]=love.graphics.newImage("resources/menu/bottom/bottomtxt2Map.png"),nil

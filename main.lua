@@ -55,7 +55,7 @@ local function PYB(dt)
             love.update=control.mainupdate
             draw=control.maindraw
             betSound:stop()
-            raceMus:play()
+            love.audio.play(raceMus)
             pybbox.allIcons=nil
             gate=nil
             return
@@ -72,11 +72,11 @@ local function checkWin()
         draw=control.windraw
         hspeed=0
         love.audio.stop()
-        local winsound=love.audio.newSource("resources/sounds/victory1.mp3","stream")
+        local winsound=love.audio.newSource("resources/sounds/winsongs/"..h.."Win.mp3","stream")
         winsound:play()
         local winImg=love.graphics.newImage("resources/winscreens/win"..h..".png")
         local winTxt=love.graphics.newImage("resources/winscreens/txt"..h..".png")
-        local longNames={RES=.76,COM=.96}
+        local longNames={RES=.76,COM=.96,YEL=.93,FFF=0}
         local winTxt2,s
         if longNames[h] then
             winTxt2=love.graphics.newImage("resources/winscreens/txt"..h.."2.png")
@@ -103,6 +103,7 @@ local function startTest(hline,mapname)
     -- initialize collision map
     map= require("maps")(mapname)
     xgc,ygc=unpack(map.goal)
+    numHorses=math.min(numHorses,#map.horsePos/2)
     -- initialize collision
     thread:start(mapname,math.min(#chline,numHorses))
     controlChan=love.thread.getChannel("control")
@@ -157,7 +158,7 @@ local function gamepadmain(_,button)
         return startTest()
     end
     if button=="dpup" then
-        numHorses=numHorses<9 and numHorses+1 or 9
+        numHorses=numHorses<math.min(#chline,#map.horsePos/2) and numHorses+1 or math.min(#chline,#map.horsePos/2)
     return end
     if button=="dpdown" then
         numHorses=numHorses>1 and numHorses-1 or 1
@@ -175,12 +176,12 @@ function love.mainload(hline,mapname)
     --setting default background color and 3D to off (I don't have 3ds to test)
     love.graphics.setBackgroundColor(0,.4,0)
     -- set default number of horses (move to menu with map later)
-    numHorses=9
+    numHorses=math.min(6,#hline)
     --set font
     love.graphics.setFont(tFont)
     -- import sounds
     betSound = love.audio.newSource("resources/sounds/placeBets.mp3","stream")
-    raceMus = love.audio.newSource("resources/sounds/hrt.ogg","stream")
+    raceMus = love.audio.newSource("resources/sounds/hrtv3.ogg","stream")
     raceMus:setLooping(true)
     love.gamepadpressed=gamepadmain
     return startTest(hline,mapname)
@@ -251,7 +252,12 @@ function control.startdraw()
     end
     love.graphics.draw(pybbox.icon,pybbox.x,pybbox.y,0,1,1)
     love.graphics.setColor(1,1,1,1)
-    return love.graphics.draw(gate,unpack(map.gatePos))
+    for i=1,(#map.gatePos/5) do
+        if numHorses>map.gatePos[5*i-4] then
+            love.graphics.draw(gate,map.gatePos[5*i-3],map.gatePos[5*i-2],0,map.gatePos[5*i-1],map.gatePos[5*i])
+        end
+    end
+    return
 end
 
 function control.maindraw()
