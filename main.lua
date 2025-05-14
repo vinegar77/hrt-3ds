@@ -25,6 +25,7 @@ local draw = function()end
 
 -- making these local to file:
 local flags,hspeed,cTime,pybStageTimer,wonTime,betSound,pybbox,xgc,ygc,numHorses,frames,gate,chline,cmapname,raceMus
+local bgOptions={"AMFSUPDuel","Custom1"}
 local thread = love.thread.newThread("GirlBoner.lua")
 local inHorses,outHorses,hIcons={},{},{}
 local controlChan,inHorChan,outHorChan
@@ -181,7 +182,8 @@ function love.mainload(hline,mapname)
     love.graphics.setFont(tFont)
     -- import sounds
     betSound = love.audio.newSource("resources/sounds/placeBets.mp3","stream")
-    raceMus = love.audio.newSource("resources/sounds/hrtcustom_unrolled.ogg","stream")
+    local r = love.math.random(1,#bgOptions)
+    raceMus = love.audio.newSource("resources/sounds/"..bgOptions[r]..".ogg","stream")
     raceMus:setLooping(true)
     love.gamepadpressed=gamepadmain
     return startTest(hline,mapname)
@@ -234,9 +236,9 @@ local function drawBottom()
     --love.graphics.print("FPS "..love.timer.getFPS(),225,30)
     love.graphics.print("FPS "..love.timer.getFPS(),224,30)
     love.graphics.print("hrt\n"..love.hrt,10,10)
-    love.graphics.print("hrt\n"..love.hrt..inHorses[1][3],9,10)
-    love.graphics.print("start: main menu\nselect: restart test\nup/down: # horses = "..numHorses.."\n(retest to update)\nx: race music off",9,80)
-    love.graphics.print("start: main menu\nselect: restart test\nup/down: # horses = "..numHorses.."\n(retest to update)\nx: race music off",10,80)
+    love.graphics.print("hrt\n"..love.hrt,9,10)
+    love.graphics.print("start: main menu\nselect: restart test\nup/down: # horses = "..numHorses.."\n(restart to update)\nx: race music off",9,80)
+    love.graphics.print("start: main menu\nselect: restart test\nup/down: # horses = "..numHorses.."\n(restart to update)\nx: race music off",10,80)
 end
 
 function control.startdraw()

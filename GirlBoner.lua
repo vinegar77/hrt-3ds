@@ -66,7 +66,6 @@ while not controlChan:pop() do
             if inHorses[i][3]<0 then
                 outHorses[i][3]=true
                 local r = love.math.random(1,3)
-                print("playing the source\n"..r..inHorses[i][3])
                 love.audio.play(hitSound[r])
                 inHorses[i][3]=20
             end

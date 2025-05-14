@@ -1,11 +1,13 @@
 local Menu={}
 -- all locals that can be deleted after leaving menu
-local cursor,menuSize,page,cursPos,menubgB,menubgT,cursorI,menuTxt,btmTxt,mark,hSelectList,hIcons,menuTimer,txtCycle,maps,gpMenuFunctions
+local cursor,menuSize,page,cursPos,menubgB,menubgT,cursorI,menuTxt,btmTxt,mark,hSelectList,hIcons,menuTimer,txtCycle,maps,gpMenuFunctions,logo,logo2
 --update with any future horses added
 local fullHorseList={"MRY","CYN","SUP","YEL","BUL","KNB","COM","BOX","RES","AMF","BIN","NGT","FF8","OOB","FFF"}
 --update with future maps added
 local fullMapList={"map1","map4"}
 love.graphics.setFont(tFont)
+local bgm = love.audio.newSource("resources/sounds/stupidhorsehrt.ogg","stream")
+bgm:setLooping(true)
 
 hSelectList={}
     for _,n in ipairs(fullHorseList) do
@@ -20,6 +22,10 @@ local function menuUnload(hline,mapname)
 end
 
 function love.mainStartup()
+    --start music if not playing
+    if not bgm:isPlaying() then
+        bgm:play()
+    end
     --recreate hSelectList if it was deleted
     if not hSelectList then
         hSelectList={}
@@ -31,6 +37,9 @@ function love.mainStartup()
     menubgB=love.graphics.newImage("resources/menu/bottom/mainmenu.png")
     menubgT=love.graphics.newImage("resources/menu/top/menutop.png")
     cursorI=love.graphics.newImage("resources/menu/bottom/bigcursor.png")
+    logo=love.graphics.newImage("resources/menu/top/logo.png")
+    logo2=love.graphics.newImage("resources/menu/top/logo2.png")
+
     cursor,menuSize,btmTxt,menuTxt,mark,hIcons=1,2,nil,nil,nil,nil
     cursPos={{9,72},{169,72}}
     love.update=nil
@@ -195,12 +204,19 @@ function Menu.drawIntroVid(screen)
     love.draw=Menu.drawMenuMain
 end
 
+local function drawTop()
+    love.graphics.draw(menubgT)
+    love.graphics.draw(logo,51,7)
+    love.graphics.draw(logo2,210,56+math.floor(5*math.sin(love.timer.getTime())+.5))
+end
+
+
 function Menu.drawMenuMain(screen)
     if screen=="bottom" then
         love.graphics.draw(menubgB)
         return love.graphics.draw(cursorI,cursPos[cursor][1],cursPos[cursor][2],0,1,1,6,6)
     end
-    return love.graphics.draw(menubgT)
+    return drawTop()
 end
 
 function Menu.drawMenuHorse(screen)
@@ -220,7 +236,7 @@ function Menu.drawMenuHorse(screen)
             love.graphics.setColor(1,1,1)
         end
     return end
-    return love.graphics.draw(menubgT)
+    return drawTop()
 end
 
 function Menu.drawMenuMaps(screen)
