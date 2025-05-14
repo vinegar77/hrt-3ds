@@ -181,7 +181,7 @@ function love.mainload(hline,mapname)
     love.graphics.setFont(tFont)
     -- import sounds
     betSound = love.audio.newSource("resources/sounds/placeBets.mp3","stream")
-    raceMus = love.audio.newSource("resources/sounds/hrtv3.ogg","stream")
+    raceMus = love.audio.newSource("resources/sounds/hrtcustom_unrolled.ogg","stream")
     raceMus:setLooping(true)
     love.gamepadpressed=gamepadmain
     return startTest(hline,mapname)
@@ -203,13 +203,13 @@ function control.mainupdate(dt)
     -- move horses
     for i,h in ipairs(inHorses) do
         local v=outHorses[i]
-        if v[3] then 
+        h[3]=h[3]-dt
+        if v[3] then
             h[3]=.2
             v[3]=false
         end
         h[1],h[2]=h[1]+v[1]*hspeed*dt,h[2]+v[2]*hspeed*dt
         -- soundBuffer to prevent horses from making multiple hit sounds when hitting a wall once
-        h[3]=h[3]-dt
     end
     if frames==2 then
         frames=0
@@ -234,9 +234,9 @@ local function drawBottom()
     --love.graphics.print("FPS "..love.timer.getFPS(),225,30)
     love.graphics.print("FPS "..love.timer.getFPS(),224,30)
     love.graphics.print("hrt\n"..love.hrt,10,10)
-    love.graphics.print("hrt\n"..love.hrt,9,10)
-    love.graphics.print("start: main menu\nselect: restart test\nup/down: # horses = "..numHorses.."\n(start new test to update)\nx: race music off",9,80)
-    love.graphics.print("start: main menu\nselect: restart test\nup/down: # horses = "..numHorses.."\n(start new test to update)\nx: race music off",10,80)
+    love.graphics.print("hrt\n"..love.hrt..inHorses[1][3],9,10)
+    love.graphics.print("start: main menu\nselect: restart test\nup/down: # horses = "..numHorses.."\n(retest to update)\nx: race music off",9,80)
+    love.graphics.print("start: main menu\nselect: restart test\nup/down: # horses = "..numHorses.."\n(retest to update)\nx: race music off",10,80)
 end
 
 function control.startdraw()

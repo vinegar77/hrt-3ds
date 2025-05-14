@@ -60,15 +60,15 @@ while not controlChan:pop() do
         break
     end
     for i,h in ipairs(shapeHorses) do
-        local soundBuffer=inHorses[i]
-        local v = outHorses[i]
+        local v=outHorses[i]
         for _, delta in pairs(HC.collisions(h)) do
             ---[[
-            if soundBuffer[3]<0 then
-                soundBuffer[3]=.2
-                v[3]=true
+            if inHorses[i][3]<0 then
+                outHorses[i][3]=true
                 local r = love.math.random(1,3)
-                hitSound[r]:play()
+                print("playing the source\n"..r..inHorses[i][3])
+                love.audio.play(hitSound[r])
+                inHorses[i][3]=20
             end
             --]]
             --to stay true to the original adding a random element to collisions
@@ -79,6 +79,11 @@ while not controlChan:pop() do
     if controlChan:pop() then break end
     inHorses,dt,hspeed=unpack(inHorChan:demand())
     if not inHorses then break end
+    for i,v in ipairs(outHorses) do
+        if v[3] then
+            inHorses[i][3]=.2
+        end
+    end
     for i,h in ipairs(shapeHorses) do
         local p=inHorses[i]
         h:moveTo(p[1],p[2])
