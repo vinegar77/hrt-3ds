@@ -24,9 +24,8 @@ love.graphics.set3D(false)
 local draw = function()end
 
 -- making these local to file:
-local flags,hspeed,cTime,pybStageTimer,wonTime,betSound,pybbox,xgc,ygc,numHorses,frames,gate,chline,cmapname,raceMus
-local bgOptions={"AMFSUPDuel","Custom1"}
-local thread = love.thread.newThread("GirlBoner.lua")
+local flags,hspeed,cTime,pybStageTimer,wonTime,betSound,pybbox,xgc,ygc,numHorses,frames,gate,chline,cmapname,raceMus,inumHorses
+local thread = love.thread.newThread("GB.lua")
 local inHorses,outHorses,hIcons={},{},{}
 local controlChan,inHorChan,outHorChan
 
@@ -46,7 +45,7 @@ local function PYB(dt)
         flags.bets=true
     end
     movePYB(dt)
-    if cTime-pybStageTimer>.1 then
+    if cTime-pybStageTimer>1.1 then
         pybStageTimer=cTime
         pybbox.stage=pybbox.stage-1
         if pybbox.stage==-1 then
@@ -55,7 +54,7 @@ local function PYB(dt)
             flags.start=false
             love.update=control.mainupdate
             draw=control.maindraw
-            betSound:stop()
+            --betSound:stop()
             love.audio.play(raceMus)
             pybbox.allIcons=nil
             gate=nil
@@ -105,6 +104,7 @@ local function startTest(hline,mapname)
     map= require("maps")(mapname)
     xgc,ygc=unpack(map.goal)
     numHorses=math.min(numHorses,#map.horsePos/2)
+    inumHorses=numHorses
     -- initialize collision
     thread:start(mapname,math.min(#chline,numHorses))
     controlChan=love.thread.getChannel("control")
@@ -165,12 +165,15 @@ local function gamepadmain(_,button)
         numHorses=numHorses>1 and numHorses-1 or 1
     return end
     if button =="x" then
-        return raceMus:stop()
+        if raceMus:isPlaying() then
+            return raceMus:pause()
+        end
+        return raceMus:play()
     end
 end
 
 ---[[
-function love.mainload(hline,mapname)
+function love.mainload(hline,mapname,bgmname)
     --hold number of frames since load for update functions
     --increment trials
     trial[mapname]=trial[mapname]+1
@@ -181,10 +184,11 @@ function love.mainload(hline,mapname)
     --set font
     love.graphics.setFont(tFont)
     -- import sounds
+    if bgmname then
+        raceMus = love.audio.newSource("resources/sounds/BGM/"..bgmname,"stream")
+        raceMus:setLooping(true)
+    end
     betSound = love.audio.newSource("resources/sounds/placeBets.mp3","stream")
-    local r = love.math.random(1,#bgOptions)
-    raceMus = love.audio.newSource("resources/sounds/"..bgOptions[r]..".ogg","stream")
-    raceMus:setLooping(true)
     love.gamepadpressed=gamepadmain
     return startTest(hline,mapname)
 end
@@ -237,8 +241,8 @@ local function drawBottom()
     love.graphics.print("FPS "..love.timer.getFPS(),224,30)
     love.graphics.print("hrt\n"..love.hrt,10,10)
     love.graphics.print("hrt\n"..love.hrt,9,10)
-    love.graphics.print("start: main menu\nselect: restart test\nup/down: # horses = "..numHorses.."\n(restart to update)\nx: race music off",9,80)
-    love.graphics.print("start: main menu\nselect: restart test\nup/down: # horses = "..numHorses.."\n(restart to update)\nx: race music off",10,80)
+    love.graphics.print("start: main menu\nselect: restart test\n\nup/down: # horses = "..numHorses.."\n(restart to update)\n\nx: toggle race music",9,80)
+    love.graphics.print("start: main menu\nselect: restart test\n\nup/down: # horses = "..numHorses.."\n(restart to update)\n\nx: toggle race music",10,80)
 end
 
 function control.startdraw()
@@ -255,7 +259,7 @@ function control.startdraw()
     love.graphics.draw(pybbox.icon,pybbox.x,pybbox.y,0,1,1)
     love.graphics.setColor(1,1,1,1)
     for i=1,(#map.gatePos/5) do
-        if numHorses>map.gatePos[5*i-4] then
+        if inumHorses>map.gatePos[5*i-4] then
             love.graphics.draw(gate,map.gatePos[5*i-3],map.gatePos[5*i-2],0,map.gatePos[5*i-1],map.gatePos[5*i])
         end
     end

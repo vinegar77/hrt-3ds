@@ -1,10 +1,12 @@
 local Menu={}
 -- all locals that can be deleted after leaving menu
-local cursor,menuSize,page,cursPos,menubgB,menubgT,cursorI,menuTxt,btmTxt,mark,hSelectList,hIcons,menuTimer,txtCycle,maps,gpMenuFunctions,logo,logo2
+local cursor,menuSize,page,cursPos,menubgB,menubgT,cursorI,menuTxt,btmTxt,mark,hSelectList,hIcons,menuTimer,txtCycle,maps,gpMenuFunctions,logo,logo2,cMapIndex
 --update with any future horses added
 local fullHorseList={"MRY","CYN","SUP","YEL","BUL","KNB","COM","BOX","RES","AMF","BIN","NGT","FF8","OOB","FFF"}
 --update with future maps added
 local fullMapList={"map1","map4"}
+local fullBGMList={"AMFSUPDuel.ogg","Custom1fix.ogg"}
+local BGMTransList={"AMF vs SUP","Custom 1"}
 love.graphics.setFont(tFont)
 local bgm = love.audio.newSource("resources/sounds/stupidhorsehrt.ogg","stream")
 bgm:setLooping(true)
@@ -14,15 +16,18 @@ hSelectList={}
         hSelectList[n]=false
     end
 
-local function menuUnload(hline,mapname)
+local function menuUnload(hline,mapname,bgmname)
 ---@diagnostic disable-next-line: unbalanced-assignments
-    cursor,menuSize,page,cursPos,menubgB,menubgT,cursorI,menuTxt,btmTxt,mark,hSelectList,hIcons,menuTimer,txtCycle,maps,gpMenuFunctions=nil
+    cursor,menuSize,page,cursPos,menubgB,menubgT,cursorI,menuTxt,btmTxt,mark,hSelectList,hIcons,menuTimer,txtCycle,maps,gpMenuFunctions,logo,logo2,bgm,cMapIndex=nil
     collectgarbage("collect")
-    return love.mainload(hline,mapname)
+    return love.mainload(hline,mapname,bgmname)
 end
 
 function love.mainStartup()
     --start music if not playing
+    if not bgm then
+        bgm = love.audio.newSource("resources/sounds/stupidhorsehrt.ogg","stream")
+    end
     if not bgm:isPlaying() then
         bgm:play()
     end
@@ -59,7 +64,7 @@ function love.mainStartup()
     gpMenuFunctions.start=love.event.quit
     gpMenuFunctions.a=function ()
         if cursor==1 then
-            return menuUnload({unpack(fullHorseList)},fullMapList[love.math.random(1,#fullMapList)])
+            return menuUnload({unpack(fullHorseList)},fullMapList[love.math.random(1,#fullMapList)],fullBGMList[love.math.random(1,#fullBGMList)])
         end
         return Menu.horseStartup()
     end
@@ -175,12 +180,25 @@ function Menu.mapStartup()
     gpMenuFunctions.back=nil
     gpMenuFunctions.b=Menu.horseStartup
     gpMenuFunctions.a=function()
+        cMapIndex=cursor+6*page
+        return Menu.bgmStartup()
+    end
+end
+
+function Menu.bgmStartup()
+    page,cursor,txtCycle=0,1,0
+    menuSize=math.min(#fullBGMList,6)
+    menuTxt=love.graphics.newImage("resources/menu/bottom/menutxtBGM.png")
+    love.draw=Menu.drawMenuBGM
+    gpMenuFunctions.cMenuList=fullBGMList
+    gpMenuFunctions.b=Menu.mapStartup
+    gpMenuFunctions.a=function()
         --transform hSelectList to string name array of selected horses
         local temp={}
         for k,v in pairs(hSelectList) do
             if v then temp[#temp+1]=k end
         end
-        return menuUnload(temp,fullMapList[cursor+6*page])
+        return menuUnload(temp,fullMapList[cMapIndex],fullBGMList[cursor+6*page])
     end
 end
 
@@ -253,6 +271,22 @@ function Menu.drawMenuMaps(screen)
         love.graphics.setColor(1,1,1)
     return end
     return love.graphics.draw(maps[cursor+6*page])
+end
+
+function Menu.drawMenuBGM(screen)
+    if screen=="bottom" then
+        love.graphics.draw(menubgB)
+        love.graphics.draw(menuTxt,62,37)
+        love.graphics.draw(btmTxt[txtCycle],9,224)
+        love.graphics.draw(cursorI,cursPos[cursor][1],cursPos[cursor][2],0,1,1,4,4)
+        love.graphics.setColor(1,1,0)
+        for i=1,menuSize do
+            love.graphics.printf(BGMTransList[i+6*page],cursPos[i][1]+4,cursPos[i][2]+16,62,"center")
+            love.graphics.printf(BGMTransList[i+6*page],cursPos[i][1]+5,cursPos[i][2]+16,62,"center")
+        end
+        love.graphics.setColor(1,1,1)
+    return end
+    return drawTop()
 end
 
 love.mainStartup()
