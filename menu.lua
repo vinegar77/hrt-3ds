@@ -27,6 +27,7 @@ function love.mainStartup()
     --start music if not playing
     if not bgm then
         bgm = love.audio.newSource("resources/sounds/stupidhorsehrt.ogg","stream")
+        bgm:setLooping(true)
     end
     if not bgm:isPlaying() then
         bgm:play()
