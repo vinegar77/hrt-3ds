@@ -22,11 +22,12 @@ Horse Race Tests recreated for the 3DS!
 * Intro opening animation
 * green horse
 ### Known Bugs
-### All 3DS Models
+**All 3DS Models:**
 * Wall-hitting sfx do not always play at right times
 * Pressing home while a race is runnng may cause horses to leave map
 * Glitches/crashes may occur if intentionally spamming buttons while screens are loading, but this is rare
-### Old 3DS/Old 2DS
+  
+**Old 3DS/Old 2DS exclusive:**
 * BGM will often stutter while gameplay appears stable, recommended to race with music off unless very few horses
 * When many horses are present, all sounds may stop playing until a horse wins
 * When many horses are present, a horse can sometimes clip into/through walls if the fps drops enough
