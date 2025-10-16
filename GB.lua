@@ -1,5 +1,4 @@
 local mapname,numHorses=...
--- it's GB for Girl Boner
 require("love.math");require("love.audio");require("love.sound")
 local HC = require("HC")
 HC.resetHash(50)
@@ -40,6 +39,7 @@ for i=1,numHorses do
     outHorses[i]={nil,nil,false}
     setDirection(i,1,2*love.math.random()-1)
 end
+-- if ur reading this it's gb for girl boner (hardon collider)
 --dt = 2/fps, starting with estimate, gets updated later
 local dt,hspeed = 2/50,70
 outHorChan:push(outHorses)

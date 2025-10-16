@@ -4,9 +4,9 @@ local cursor,menuSize,page,cursPos,menubgB,menubgT,cursorI,menuTxt,btmTxt,mark,h
 --update with any future horses added
 local fullHorseList={"MRY","CYN","SUP","YEL","BUL","KNB","COM","BOX","RES","AMF","BIN","NGT","FF8","OOB","FFF"}
 --update with future maps added
-local fullMapList={"map1","map4"}
-local fullBGMList={"AMFSUPDuel.ogg","Custom1fix.ogg"}
-local BGMTransList={"AMF vs SUP","Custom 1"}
+local fullMapList={"map1","map3","map4"}
+local fullBGMList={"AMFSUPDuel.ogg","Custom1fix.ogg","tbnewlowqual.ogg"}
+local BGMTransList={"AMF vs SUP","Lazy Horse Daily","Place Your Bets!"}
 love.graphics.setFont(tFont)
 local bgm = love.audio.newSource("resources/sounds/stupidhorsehrt.ogg","stream")
 bgm:setLooping(true)
@@ -282,8 +282,8 @@ function Menu.drawMenuBGM(screen)
         love.graphics.draw(cursorI,cursPos[cursor][1],cursPos[cursor][2],0,1,1,4,4)
         love.graphics.setColor(1,1,0)
         for i=1,menuSize do
-            love.graphics.printf(BGMTransList[i+6*page],cursPos[i][1]+4,cursPos[i][2]+16,62,"center")
-            love.graphics.printf(BGMTransList[i+6*page],cursPos[i][1]+5,cursPos[i][2]+16,62,"center")
+            love.graphics.printf(BGMTransList[i+6*page],cursPos[i][1]+4,cursPos[i][2]+13,62,"center")
+            love.graphics.printf(BGMTransList[i+6*page],cursPos[i][1]+5,cursPos[i][2]+13,62,"center")
         end
         love.graphics.setColor(1,1,1)
     return end

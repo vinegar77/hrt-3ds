@@ -8,6 +8,7 @@ end
 --set font early
 tFont=love.graphics.newFont("resources/Terminal2.ttf",14)
 tFont:setLineHeight(1.3)
+--love.graphics.setDefaultFilter("nearest","nearest")
 
 -- initialize a few local tables
 local map,winscreen,control={},{},{}
@@ -286,9 +287,10 @@ function control.windraw()
 end
 
 function control.winscreendraw()
+    love.graphics.setColor(.984,.514,.243)
+    love.graphics.rectangle("fill",0,0,400,240)
     love.graphics.setColor(1,1,1,wonTime-6)
     love.graphics.draw(winscreen.bg)
-    love.graphics.setBackgroundColor(.984,.514,.243)
     if wonTime>7 then
         local k=(wonTime>8 and 1 or wonTime-7)
         if winscreen.txt2.scale and k>winscreen.txt2.scale then
