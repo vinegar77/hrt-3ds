@@ -2,7 +2,7 @@ local Menu={}
 -- all locals that can be deleted after leaving menu
 local cursor,menuSize,page,cursPos,menubgB,menubgT,cursorI,menuTxt,btmTxt,mark,hSelectList,hIcons,menuTimer,txtCycle,maps,gpMenuFunctions,logo,logo2,cMapIndex
 --update with any future horses added
-local fullHorseList={"MRY","CYN","SUP","YEL","BUL","KNB","COM","BOX","RES","AMF","BIN","NGT","FF8","OOB","FFF"}
+local fullHorseList={"MRY","CYN","SUP","YEL","BUL","KNB","COM","BOX","RES","AMF","BIN","NGT","FF8","OOB","FFF","TSH"}
 --update with future maps added
 local fullMapList={"map1","map3","map4"}
 local fullBGMList={"AMFSUPDuel.ogg","Custom1fix.ogg","tbnewlowqual.ogg"}
