@@ -5,8 +5,8 @@ local cursor,menuSize,page,cursPos,menubgB,menubgT,cursorI,menuTxt,btmTxt,mark,h
 local fullHorseList={"MRY","CYN","SUP","YEL","BUL","KNB","COM","BOX","RES","AMF","BIN","NGT","FF8","OOB","FFF","TSH"}
 --update with future maps added
 local fullMapList={"map1","map3","map4"}
-local fullBGMList={"AMFSUPDuel.ogg","Custom1fix.ogg","tbnewlowqual.ogg"}
-local BGMTransList={"AMF vs SUP","Lazy Horse Daily","Place Your Bets!"}
+local fullBGMList={"","AMFSUPUltra.wav","Custom1Ultra.wav","tbnewultra.wav"}
+local BGMTransList={"No BGM","AMF vs SUP Duel","Lazy Horse Daily","Place Your Bets!"}
 love.graphics.setFont(tFont)
 local bgm = love.audio.newSource("resources/sounds/stupidhorsehrt.ogg","stream")
 bgm:setLooping(true)
@@ -65,7 +65,7 @@ function love.mainStartup()
     gpMenuFunctions.start=love.event.quit
     gpMenuFunctions.a=function ()
         if cursor==1 then
-            return menuUnload({unpack(fullHorseList)},fullMapList[love.math.random(1,#fullMapList)],fullBGMList[love.math.random(1,#fullBGMList)])
+            return menuUnload({unpack(fullHorseList)},fullMapList[love.math.random(1,#fullMapList)],fullBGMList[love.math.random(2,#fullBGMList)])
         end
         return Menu.horseStartup()
     end

@@ -4,7 +4,7 @@
 
 Horse Race Tests recreated for the 3DS!
 
-## Current version: 1.1.0 (Minor Content Update)
+## Current version: 1.1.1 (Minor Content Update + Audio Patch)
 
 <img src=https://i.imgur.com/fNYTAGf.png width=600>
 
@@ -17,6 +17,15 @@ Horse Race Tests recreated for the 3DS!
 * Custom or random races, set up the race of your dreams!
 * Features low-res remake of e1m3t4/e1m6t2 bg theme and 2 custom bg themes by me!
 * Enjoy the crisp 400x240px 3DS resolution as the arm11 struggles with all the wall collisions
+
+### 1.1.1 Patch Features
+* Fixed a bug where toggling audio on and off during a race led to a crash.
+* Added an option to run a custom race without music
+  * Win Songs will still play at the end of the race.
+* Adjusted BGM audio type to greatly reduce audio stutter on Old3DS. 
+  * BGM with the default number of horses (6) may occasionally still stutter slightly, but is closer to performace pre-1.1.0 update. 
+  * More complex maps like map 3 have worse performance than others. 
+  * Further improvements may come in a future version.
 
 ### 1.1.0 Update Features
 

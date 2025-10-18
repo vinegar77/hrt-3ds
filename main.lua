@@ -167,7 +167,7 @@ local function gamepadmain(_,button)
     return end
     if button =="x" then
         if raceMus:isPlaying() then
-            return raceMus:pause()
+            return love.audio.stop(raceMus)
         end
         return raceMus:play()
     end
@@ -185,9 +185,12 @@ function love.mainload(hline,mapname,bgmname)
     --set font
     love.graphics.setFont(tFont)
     -- import sounds
-    if bgmname then
+    if bgmname and bgmname~="" then
         raceMus = love.audio.newSource("resources/sounds/BGM/"..bgmname,"stream")
         raceMus:setLooping(true)
+    else
+        raceMus = love.audio.newSource("resources/sounds/hit1.wav","static")
+        raceMus:setLooping(false)
     end
     betSound = love.audio.newSource("resources/sounds/placeBets.mp3","stream")
     love.gamepadpressed=gamepadmain
