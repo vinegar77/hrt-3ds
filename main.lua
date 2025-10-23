@@ -19,7 +19,11 @@ local trial={}
 for _,v in ipairs(fullMapList) do
     trial[v]=0
 end
+if love.graphics.set3D then
 love.graphics.set3D(false)
+else
+love.graphics.setStereoscopic(false)
+end
 
 -- function variables
 local draw = function()end
@@ -167,7 +171,7 @@ local function gamepadmain(_,button)
     return end
     if button =="x" then
         if raceMus:isPlaying() then
-            return love.audio.stop(raceMus)
+            return love.audio.pause(raceMus)
         end
         return raceMus:play()
     end
@@ -224,7 +228,9 @@ function control.mainupdate(dt)
     if frames==2 then
         frames=0
         inHorChan:push({inHorses,2*love.timer.getAverageDelta(),hspeed})
+        local ctime = love.timer.getTime()
         outHorses=outHorChan:demand()
+        print("mTime: "..(love.timer.getTime()-ctime))
     end
 end
 

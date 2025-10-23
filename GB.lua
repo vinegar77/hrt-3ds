@@ -1,12 +1,16 @@
 local mapname,numHorses=...
 require("love.math");require("love.audio");require("love.sound")
 local HC = require("HC")
-HC.resetHash(50)
+HC.resetHash(mapname=="map3" and 45 or 50)
 local map = require("maps")(mapname,HC)
 --unload maps file cache
 package.loaded["maps"]=nil
 --set local sqrt to avoid repeatedly calling math.
 local sqrt=math.sqrt
+local randNorm = love.math.randomNormal
+local rand = love.math.random
+local col = HC.collisions
+local play = love.audio.play
 --load audio
 local hitSound={}
 for i=1,3 do
@@ -45,14 +49,9 @@ local dt,hspeed = 2/50,70
 outHorChan:push(outHorses)
 controlChan:demand()
 
+
 while not controlChan:pop() do
-    --estimate future horses
-    for i,h in ipairs(shapeHorses) do
-        local v=outHorses[i]
-        v[3]=false
-        h:move(v[1]*(dt)*hspeed,v[2]*(dt)*hspeed)
-    end
-    for h,_ in pairs(HC.collisions(map.goal)) do
+    for h,_ in pairs(col(map.goal)) do
         controlChan:push(h.index)
         controlChan:push(h.index)
         controlChan:push(h.index)
@@ -62,17 +61,16 @@ while not controlChan:pop() do
     end
     for i,h in ipairs(shapeHorses) do
         local v=outHorses[i]
-        for _, delta in pairs(HC.collisions(h)) do
+        for _, delta in pairs(col(h)) do
             ---[[
             if inHorses[i][3]<0 then
                 outHorses[i][3]=true
-                local r = love.math.random(1,3)
-                love.audio.play(hitSound[r])
-                inHorses[i][3]=20
+                play(hitSound[rand(1,3)])
+                inHorses[i][3]=.2
             end
             --]]
             --to stay true to the original adding a random element to collisions
-            setDirection(i,delta.x+delta.y*love.math.randomNormal(1,0)+v[1], delta.y+delta.x*love.math.randomNormal(1,0)+v[2])
+            setDirection(i,delta.x+delta.y*randNorm()+v[1], delta.y+delta.x*randNorm()+v[2])
         end
     end
     outHorChan:push(outHorses)
@@ -87,5 +85,9 @@ while not controlChan:pop() do
     for i,h in ipairs(shapeHorses) do
         local p=inHorses[i]
         h:moveTo(p[1],p[2])
+        --estimate future horses
+        local v=outHorses[i]
+        v[3]=false
+        h:move(v[1]*dt*hspeed,v[2]*dt*hspeed)
     end
 end
